@@ -1,0 +1,223 @@
+main
+write as "starting output", / using 6
+   call initialize
+   start simulation		''-- start the actual simulation run
+   call show_results		''-- show results in form
+   stop
+end  ''main
+
+''-----------------------------------------------------------------
+
+Routine clock_update given TIME yielding NEWTIME
+	''-- This routine is called every time TIME.V changes (attached to
+	''-- that event in INITIALIZE.GRAPHICS. The assignment to CLOCKTIME
+	''-- (is a display variable) causes the associated clock icon
+	''-- to be updated on the screen.
+    Define TIME, NEWTIME as double variables
+
+    Let NEWTIME = TIME
+    Let Estacionamento'clocktime = TIME
+
+End 
+
+''-----------------------------------------------------------------
+
+process method Cliente'tempo_estacionamento
+	''-- Models behavior of a customer entering the bank (created by
+	''-- the GENERATOR). 
+   define arrival_time as a real variable
+   let arrival_time = time.v
+   request 1 vacancy(1)
+   ''let Cliente'waiting_time = (time.v - arrival_time) * hours.v * minutes.v/~poisson.f(2, 2)~/
+   /~work exponential.f(estacionamento'mean_service_time, 2) minutes~/
+   let Cliente'waiting_time = poisson.f(2,2)
+   let estacionamento'waiting_time = Cliente'waiting_time
+   work poisson.f(2, 2) hours
+   
+   ''let estacionamento'waiting_time = (time.v - arrival_time) * hours.v * minutes.v
+   ''work exponential.f(estacionamento'mean_service_time, 2) minutes
+   relinquish 1 vacancy(1)
+   
+   /~print 1 line with estacionamento'clocktime, cliente'waiting_time thus
+   Um cliente chegou **.** horas e ficou estacionado por **.** horas~/
+   '' stop
+end  ''tempo_estacionamento
+
+''-----------------------------------------------------------------
+
+process method Cliente'gerar_dinheiro
+
+    Cliente'cincoCent = randi.f(0, 1, 2)
+    Cliente'dezCent = randi.f(0, 1, 2)
+    Cliente'vintecincoCent = randi.f(0, 1, 2)
+    Cliente'cinquentaCent = randi.f(0, 1, 2)
+    Cliente'umrealCent = randi.f(0, 1, 2)
+    Cliente'doisreaisCedula = randi.f(0, 1, 2)
+    Cliente'cincoreaisCedula = randi.f(0, 1, 2)
+    Cliente'dezreaisCedula = randi.f(0, 1, 2)
+    Cliente'vintereaisCedula = randi.f(0, 1, 2)
+    Cliente'cinquentareaisCedula = randi.f(0, 1, 2)
+    
+    print 10 line with Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
+    **.** numero de moedas cinco centavos
+    **.** numero de moedas dez centavos
+    **.** numero de moedas vinte e cinco centavos
+    **.** numero de moedas cinquenta centavos
+    **.** numero de moedas um reaal centavos
+    **.** numero de cedulas dois reais
+    **.** numero de cedulas cinco reais
+    **.** numero de cedulas dez reais
+    **.** numero de cedulas vinte reais
+    **.** numero de cedulas cinquenta reais
+   '' stop
+   
+   
+end ''gerar_dinheiro_estacionamento
+
+''-----------------------------------------------------------------
+
+
+process method Estacionamento'generator
+	''-- Generates CUSTOMER processes with random interarrival times.
+   define time_to_close as a real variable
+   let time_to_close = time.v + day_length / hours.v
+   until time.v >= time_to_close
+   do
+      create a Cliente
+      activate a tempo_estacionamento(Cliente) now      
+      activate a gerar_dinheiro(Cliente) now
+      
+      wait exponential.f(mean_interarrival_time, 1) minutes
+   loop
+   
+end  ''generator
+
+
+''-----------------------------------------------------------------
+
+routine initialize
+   define clockGraph as a Clock reference variable
+   define queueGraph as a Meter reference variable
+   define waitGraph as a Plot reference variable
+
+     	''-- initialize simulation parameters, create entities etc.
+   Estacionamento'no_of_vacancies = 20
+   Estacionamento'mean_interarrival_time = 2.0
+   Estacionamento'mean_service_time = 7.0 ''-- TORNAR RANDOM COM DISTRIBUIÇÃO POISON
+   Estacionamento'day_length = 24.0
+
+   create every vacancy(1)
+   let u.vacancy(1) = Estacionamento'no_of_vacancies
+   activate a Estacionamento'generator now
+
+   Let TIMESCALE.V = 1000
+   Let TIMESYNC.V = 'clock_update'
+
+   ''bring up a window
+   create Estacionamento_window
+   let title(Estacionamento_window) = "Parking Simulation"
+   call display(Estacionamento_window)
+
+   create Estacionamento_view
+   file this Estacionamento_view in view_set(Estacionamento_window)
+   
+   
+   create clockGraph, queueGraph, waitGraph 
+   let appearance(clockGraph) = Templates'find("clock.grf")
+   let appearance(queueGraph) = Templates'find("queue.grf")
+   let appearance(waitGraph) = Templates'find("wait.grf")
+   file clockGraph in graphic_set(Estacionamento_view)
+   file queueGraph in graphic_set(Estacionamento_view)
+   file waitGraph in graphic_set(Estacionamento_view)
+
+   show Estacionamento'CLOCKTIME with clockGraph
+   show n.x.vacancy(1) with queueGraph
+   show histogram Estacionamento'waiting_time_histogram with waitGraph
+
+	''-- display title text in top left corner
+   create a Estacionamento'shape
+   file this Estacionamento'shape in graphic_set(Estacionamento_view)
+   let appearance(Estacionamento'shape) = Templates'find("title.icn")
+   call display_at(Estacionamento'shape)(12000.0, 31000.0)
+
+   call get_parameters
+
+	''-- init simulation parameters from user input
+   let u.VACANCY(1) = Estacionamento'no_of_vacancies
+end
+
+
+
+''-----------------------------------------------------------------
+
+routine get_parameters
+	''-- Offer the model parameters for change by the user in a form.
+
+   define dialog as a DialogBox reference variable
+   define field as a Field reference variable
+
+   create dialog
+   let appearance(dialog) = Templates'find("input.frm")
+   file this dialog in form_set(Estacionamento_window)
+
+     ''--- set the current values: parameters:
+   let value(find(dialog)("NUM.TELLERS")) = Estacionamento'no_of_vacancies
+   let value(find(dialog)("INTARR.TIME")) = Estacionamento'mean_interarrival_time
+   let value(find(dialog)("SERVICE.TIME")) = Estacionamento'mean_service_time
+   let value(find(dialog)("BUSINESS.HOURS")) = Estacionamento'day_length
+  
+   let field = accept_input(dialog)
+   if field = 0 or name(field) = "EXIT"
+      stop
+   endif
+ 
+     ''-- now set the new parameter values
+   Estacionamento'no_of_vacancies = value(find(dialog)("NUM.TELLERS"))
+   Estacionamento'mean_interarrival_time = value(find(dialog)("INTARR.TIME"))
+   Estacionamento'mean_service_time = value(find(dialog)("SERVICE.TIME"))
+   Estacionamento'day_length = value(find(dialog)("BUSINESS.HOURS"))
+ 
+end
+
+''-----------------------------------------------------------------
+
+routine show_results
+
+   define xlo, xhi, ylo, yhi, click_x, click_y as double variables
+   define dialog as a Dialogbox reference variable
+   define utilization as a real variable
+
+      ''-- display the 'endsim.icn' which asks for a user click 
+   call erase(Estacionamento'shape)		''-- erase the old title icon
+   let appearance(Estacionamento'shape) = Templates'find("endsim.icn")
+   call display_at(Estacionamento'shape)(12000, 31000)
+
+     ''-- now wait for mouse click on the endsim icon
+   call get_bounding_box(Estacionamento'shape) yielding xlo, xhi, ylo, yhi
+   call accept_input(Estacionamento_window)(0,0,0,0,0) yielding click_x, click_y 
+   while click_x < xlo or click_x > xhi or click_y < ylo or click_y > yhi
+      call accept_input(Estacionamento_window)(0,0,0,0,0) yielding click_x, click_y 
+
+     ''----- now show the results dialog
+   create dialog
+   let appearance(dialog) = Templates'find("results.frm")
+   file this dialog in form_set(Estacionamento_window)
+ 
+     ''--- set the current values: parameters:
+   let value(find(dialog)("NUM.TELLERS")) = estacionamento'no_of_vacancies
+   let value(find(dialog)("INTARR.TIME")) = estacionamento'mean_interarrival_time
+   let value(find(dialog)("SERVICE.TIME")) = estacionamento'mean_service_time
+   let value(find(dialog)("BUSINESS.HOURS")) = estacionamento'day_length
+ 
+     ''-- result variables:
+   let value(find(dialog)("FINISH.TIME")) = TIME.V * HOURS.V
+   let utilization = avg_vacancy_busy(1) / Estacionamento'no_of_vacancies * 100
+   let value(find(dialog)("TELLER.UTIL")) = utilization
+   let value(find(dialog)("AVG.Q.LEN")) = avg_queue_length(1)
+   let value(find(dialog)("MAX.Q.LEN")) = max_queue_length(1)
+   let value(find(dialog)("AVG.CUST.WAIT")) = Estacionamento'mean_waiting_time
+ 
+     ''-- wait for user to dismiss the dialog
+   call accept_input(dialog)
+end
+

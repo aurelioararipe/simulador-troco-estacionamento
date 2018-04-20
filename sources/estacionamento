@@ -1,0 +1,67 @@
+main
+write as "starting output", / using 6
+   call initialize
+   start simulation		''-- start the actual simulation run
+   call show_results		''-- show results in form
+   stop
+end  ''main
+
+''-----------------------------------------------------------------
+
+routine initialize
+   define clockGraph as a Clock reference variable
+   define queueGraph as a Meter reference variable
+   define waitGraph as a Plot reference variable
+
+     	''-- initialize simulation parameters, create entities etc.
+   Bank'no_of_tellers = 4
+   Bank'mean_interarrival_time = 2.0
+   Bank'mean_service_time = 7.0
+   Bank'day_length = 24.0
+
+     ''-- create entities 
+   create every teller(1)
+   let u.teller(1) = Bank'no_of_tellers
+   activate a Bank'generator now
+   
+	''-- Set animation speed (TIMESCALE.V) and make CLOCK.UPDATE be called
+	''-- every time TIME.V changes.
+	''-- Also: Associate the graphs with the display variables.
+
+   Let TIMESCALE.V = 1000  '' clock ticks (1/100 sec) per unit
+   Let TIMESYNC.V = 'clock_update'
+
+   ''bring up a window
+   create bank_window
+   let title(bank_window) = "A Simple Bank Simulation"
+   call display(bank_window)
+
+   create bank_view
+   file this bank_view in view_set(bank_window)
+
+   create clockGraph, queueGraph, waitGraph 
+   let appearance(clockGraph) = Templates'find("clock.grf")
+   let appearance(queueGraph) = Templates'find("queue.grf")
+   let appearance(waitGraph) = Templates'find("wait.grf")
+   file clockGraph in graphic_set(bank_view)
+   file queueGraph in graphic_set(bank_view)
+   file waitGraph in graphic_set(bank_view)
+
+   ''associate the display variables with the graphs
+   show Bank'CLOCKTIME with clockGraph
+   show n.q.teller(1) with queueGraph
+   show histogram Bank'waiting_time_histogram with waitGraph
+
+	''-- display title text in top left corner
+   create a bank'shape
+   file this bank'shape in graphic_set(bank_view)
+   let appearance(bank'shape) = Templates'find("title.icn")
+   call display_at(bank'shape)(12000.0, 31000.0)
+
+   call get_parameters
+
+	''-- init simulation parameters from user input
+   let u.TELLER(1) = Bank'no_of_tellers
+end
+
+''-----------------------------------------------------------------

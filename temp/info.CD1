@@ -1,0 +1,23 @@
+0 0 begin module ..\sources\preamble.sim
+ line       2  PREAMBLE
+ status     1  PREAMBLE
+0 0 begin module ..\sources\parking.sim
+ line       1  MAIN
+ status     1  MAIN
+ line      11  Rclock_update
+ status     1  Rclock_update
+ line      25  Rtempo_estacionamento
+ status     2  Rtempo_estacionamento
+ line      48  Rgerar_dinheiro
+ status     1  Rgerar_dinheiro
+ line      80  Rgenerator
+ status     1  Rgenerator
+ line      98  Rinitialize
+ status     1  Rinitialize
+ line     153  Rget_parameters
+ status     1  Rget_parameters
+ line     184  Rshow_results
+ status     1  Rshow_results
+0 0 begin module C:\Program Files (x86)\SIMOO_R4_student\defs\gui.m.sim
+ line       1  gui.m
+ status     1  gui.m

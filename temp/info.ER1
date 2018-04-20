@@ -1,0 +1,4 @@
+0 0 begin module ..\sources\preamble.sim
+0 0 begin module ..\sources\parking.sim
+parking.sim: line    28** Warning 1142  involving "arrival_time" : Local variable modified but not used
+0 0 begin module C:\Program Files (x86)\SIMOO_R4_student\defs\gui.m.sim

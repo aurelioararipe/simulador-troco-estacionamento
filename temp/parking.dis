@@ -1,0 +1,14 @@
+implementation: <main> "parking.sim" 0 0
+routine: clock_update "parking.sim"      11 0
+routine: tempo_estacionamento "parking.sim"      25 0
+routine: gerar_dinheiro "parking.sim"      48 0
+routine: generator "parking.sim"      80 0
+routine: initialize "parking.sim"      98 0
+routine: get_parameters "parking.sim"     153 0
+routine: show_results "parking.sim"     184 0
+routine: <main> "parking.sim"       1 0
+class: estacionamento "" 0 0
+class_method: generator "parking.sim"      80 0
+class: cliente "" 0 0
+object_method: tempo_estacionamento "parking.sim"      25 0
+object_method: gerar_dinheiro "parking.sim"      48 0

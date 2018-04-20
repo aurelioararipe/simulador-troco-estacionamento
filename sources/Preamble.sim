@@ -1,0 +1,71 @@
+
+Preamble importing the gui.m subsystem
+
+   normally, mode is undefined			
+
+   begin class Estacionamento
+      the class has
+         a no_of_vacancies,
+         a mean_interarrival_time,
+         a mean_service_time,
+         a day_length,
+         a waiting_time,
+         a wlo,
+         a whi,
+         a wdelta,
+         a clocktime,
+         a generator process method, and
+         a shape
+
+      tally waiting_time_histogram (wlo to whi by wdelta)
+         as the dynamic histogram of waiting_time
+      tally mean_waiting_time as the mean of waiting_time
+      display variables include clocktime
+        
+      define generator as a process method
+      define shape as an Icon reference variable
+      define no_of_vacancies as an integer variable
+      define mean_interarrival_time, mean_service_time, day_length
+         and waiting_time as real variables
+      define wlo, whi and wdelta as double variables
+      define clocktime as a double variable
+   end
+  
+   begin class Cliente
+      every Cliente has
+         a tempo_estacionamento process method,
+         a gerar_dinheiro process method,
+		 a carteira,
+         a tempo_chegada, 
+         a cincoCent,
+         a dezCent,
+         a vintecincoCent,
+         a cinquentaCent,
+         a umrealCent, 
+         a doisreaisCedula,
+         a cincoreaisCedula, 
+         a dezreaisCedula, 
+         a vintereaisCedula,
+         a cinquentareaisCedula, ''and
+         a waiting_time
+      
+      define tempo_estacionamento, and gerar_dinheiro as a process method
+	  define carteira, waiting_time, and tempo_chegada as a double variables
+      define cincoCent, dezCent, vintecincoCent, cinquentaCent, umrealCent, doisreaisCedula, cincoreaisCedula, dezreaisCedula, vintereaisCedula, and cinquentareaisCedula as integer variables
+
+   end
+   
+   
+   
+   resources include Vacancy
+
+   display variables include n.x.vacancy
+
+   accumulate avg_vacancy_busy as the average of n.x.vacancy
+   accumulate avg_queue_length as the average,
+      max_queue_length as the maximum of n.q.vacancy
+
+   define estacionamento_window as a Window reference variable
+   define estacionamento_view as a View reference variable
+
+END  ''Preamble
