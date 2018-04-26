@@ -35,7 +35,9 @@ Preamble importing the gui.m subsystem
       every Cliente has
          a tempo_estacionamento process method,
          a gerar_dinheiro process method,
+         a valor_total_carteira process method,
 		 a carteira,
+         a valorPagamento,
          a tempo_chegada, 
          a cincoCent,
          a dezCent,
@@ -49,8 +51,8 @@ Preamble importing the gui.m subsystem
          a cinquentareaisCedula, ''and
          a waiting_time
       
-      define tempo_estacionamento, and gerar_dinheiro as a process method
-	  define carteira, waiting_time, and tempo_chegada as a double variables
+      define tempo_estacionamento, gerar_dinheiro, and valor_total_carteira as a process method
+	  define carteira, valorPagamento, waiting_time, and tempo_chegada as a double variables
       define cincoCent, dezCent, vintecincoCent, cinquentaCent, umrealCent, doisreaisCedula, cincoreaisCedula, dezreaisCedula, vintereaisCedula, and cinquentareaisCedula as integer variables
 
    end

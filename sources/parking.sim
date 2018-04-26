@@ -30,10 +30,11 @@ process method Cliente'tempo_estacionamento
    request 1 vacancy(1)
    ''let Cliente'waiting_time = (time.v - arrival_time) * hours.v * minutes.v/~poisson.f(2, 2)~/
    /~work exponential.f(estacionamento'mean_service_time, 2) minutes~/
-   let Cliente'waiting_time = poisson.f(2,2)
-   let estacionamento'waiting_time = Cliente'waiting_time
-   work poisson.f(2, 2) hours
+   let Cliente'waiting_time = poisson.f(2,2)*60 + poisson.f(10,2)
    
+   let estacionamento'waiting_time = Cliente'waiting_time/60
+   work Cliente'waiting_time minutes
+   ''Cliente'waiting_time
    ''let estacionamento'waiting_time = (time.v - arrival_time) * hours.v * minutes.v
    ''work exponential.f(estacionamento'mean_service_time, 2) minutes
    relinquish 1 vacancy(1)
@@ -47,18 +48,39 @@ end  ''tempo_estacionamento
 
 process method Cliente'gerar_dinheiro
 
-    Cliente'cincoCent = randi.f(0, 1, 2)
-    Cliente'dezCent = randi.f(0, 1, 2)
-    Cliente'vintecincoCent = randi.f(0, 1, 2)
-    Cliente'cinquentaCent = randi.f(0, 1, 2)
-    Cliente'umrealCent = randi.f(0, 1, 2)
-    Cliente'doisreaisCedula = randi.f(0, 1, 2)
-    Cliente'cincoreaisCedula = randi.f(0, 1, 2)
-    Cliente'dezreaisCedula = randi.f(0, 1, 2)
-    Cliente'vintereaisCedula = randi.f(0, 1, 2)
-    Cliente'cinquentareaisCedula = randi.f(0, 1, 2)
+    if  frac.f(Cliente'waiting_time/15) < 0.5 and frac.f(Cliente'waiting_time/15) <> 0
+        Cliente'valorPagamento = (int.f(Cliente'waiting_time/15+0.5))*1.75
+    else
+        Cliente'valorPagamento = (int.f(Cliente'waiting_time/15))*1.75
+    always
+    if Cliente'valorPagamento < 7.0
+        Cliente'valorPagamento = 7.0
+    endif
     
-    print 10 line with Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
+    print 2 line with Cliente'valorPagamento, Cliente'waiting_time thus
+    **.** VALOR PAGAMENTO
+    **.** WAITING TIME
+    Cliente'carteira = 0
+    until Cliente'carteira >= Cliente'valorPagamento
+    do   
+	    Cliente'cincoCent = randi.f(0, 1, 2) + Cliente'cincoCent
+	    Cliente'dezCent = randi.f(0, 1, 2) + Cliente'dezCent
+	    Cliente'vintecincoCent = randi.f(0, 1, 2) + Cliente'vintecincoCent
+	    Cliente'cinquentaCent = randi.f(0, 1, 2) + Cliente'cinquentaCent
+	    Cliente'umrealCent = randi.f(0, 1, 2) + Cliente'umrealCent
+	    Cliente'doisreaisCedula = randi.f(0, 1, 2) + Cliente'doisreaisCedula
+	    Cliente'cincoreaisCedula = randi.f(0, 1, 2) + Cliente'cincoreaisCedula
+	    Cliente'dezreaisCedula = randi.f(0, 1, 2) + Cliente'dezreaisCedula
+	    Cliente'vintereaisCedula = randi.f(0, 1, 2) + Cliente'vintereaisCedula
+	    Cliente'cinquentareaisCedula = randi.f(0, 1, 2) + Cliente'cinquentareaisCedula
+        let Cliente'carteira = Cliente'cincoCent*0.05 + Cliente'dezCent*0.10 + Cliente'vintecincoCent*0.25 + Cliente'cinquentaCent*0.5 + Cliente'umrealCent*1 + Cliente'doisreaisCedula*2 + Cliente'cincoreaisCedula*5 + Cliente'dezreaisCedula*10 + Cliente'vintereaisCedula*20 + Cliente'cinquentareaisCedula*50
+        print 1 line with Cliente'carteira thus
+        **.** CARTEIRA
+    loop 
+    
+    print 13 line with TIME.V*HOURS.V, Cliente'waiting_time, Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
+    ***.*** TEMPO
+    ***.*** TEMPO CLIENTE ESTACIONAMENTO
     **.** numero de moedas cinco centavos
     **.** numero de moedas dez centavos
     **.** numero de moedas vinte e cinco centavos
@@ -69,10 +91,19 @@ process method Cliente'gerar_dinheiro
     **.** numero de cedulas dez reais
     **.** numero de cedulas vinte reais
     **.** numero de cedulas cinquenta reais
+    ------------------------------------
    '' stop
    
    
 end ''gerar_dinheiro_estacionamento
+
+''-----------------------------------------------------------------
+
+process method Cliente'valor_total_carteira
+    let Cliente'carteira = Cliente'cincoCent*0.05 + Cliente'dezCent*0.10 + Cliente'vintecincoCent*0.25 + Cliente'cinquentaCent*0.5 + Cliente'umrealCent*1 + Cliente'doisreaisCedula*2 + Cliente'cincoreaisCedula*5 + Cliente'dezreaisCedula*10 + Cliente'vintereaisCedula*20 + Cliente'cinquentareaisCedula*50
+    
+end ''valor_total_carteira
+
 
 ''-----------------------------------------------------------------
 
@@ -87,7 +118,7 @@ process method Estacionamento'generator
       activate a tempo_estacionamento(Cliente) now      
       activate a gerar_dinheiro(Cliente) now
       
-      wait exponential.f(mean_interarrival_time, 1) minutes
+      wait (3/40)*(TIME.V*HOURS.V)*(TIME.V*HOURS.V)-3*(TIME.V*HOURS.V)+40 minutes''exponential.f(mean_interarrival_time, 1) minutes
    loop
    
 end  ''generator
