@@ -9,10 +9,6 @@ end  ''main
 ''-----------------------------------------------------------------
 
 Routine clock_update given TIME yielding NEWTIME
-	''-- This routine is called every time TIME.V changes (attached to
-	''-- that event in INITIALIZE.GRAPHICS. The assignment to CLOCKTIME
-	''-- (is a display variable) causes the associated clock icon
-	''-- to be updated on the screen.
     Define TIME, NEWTIME as double variables
 
     Let NEWTIME = TIME
@@ -23,16 +19,25 @@ End
 ''-----------------------------------------------------------------
 
 process method Cliente'tempo_estacionamento
-	''-- Models behavior of a customer entering the bank (created by
-	''-- the GENERATOR). 
-   define arrival_time as a real variable
-   let arrival_time = time.v
+
+   define arrival_time, sumTime as a real variable
+   let arrival_time = TIME.V*HOURS.V*MINUTES.V
+   Cliente'waiting_time = 1450 ''atribuição para entrar no loop e obedecer o tempo limite do dia
    request 1 vacancy(1)
-   ''let Cliente'waiting_time = (time.v - arrival_time) * hours.v * minutes.v/~poisson.f(2, 2)~/
-   /~work exponential.f(estacionamento'mean_service_time, 2) minutes~/
-   let Cliente'waiting_time = poisson.f(2,2)*60 + poisson.f(10,2)
+
+   ''let Cliente'waiting_time = poisson.f(2,2)*60 + poisson.f(10,2) FUNCIONANDO
+
+'' CONDIÇÃO DE PARADA AO TERMINO DAS 24H FUNCIONANDO! Comentar a de cima se usar esta
+   until Cliente'waiting_time + arrival_time < 1440
+    do   
+	    sumTime = Cliente'waiting_time + arrival_time
+        let Cliente'waiting_time = poisson.f(2,2)*60 + poisson.f(10,2)
+        ''print 1 line with sumTime thus
+        ''**.** sumTime
+    loop 
+        
+   let estacionamento'waiting_time = Cliente'waiting_time/60   
    
-   let estacionamento'waiting_time = Cliente'waiting_time/60
    work Cliente'waiting_time minutes
    ''Cliente'waiting_time
    ''let estacionamento'waiting_time = (time.v - arrival_time) * hours.v * minutes.v
@@ -57,44 +62,53 @@ process method Cliente'gerar_dinheiro
         Cliente'valorPagamento = 7.0
     endif
     
-    print 2 line with Cliente'valorPagamento, Cliente'waiting_time thus
-    **.** VALOR PAGAMENTO
-    **.** WAITING TIME
-    Cliente'carteira = 0
-    until Cliente'carteira >= Cliente'valorPagamento
-    do   
-	    Cliente'cincoCent = randi.f(0, 1, 2) + Cliente'cincoCent
-	    Cliente'dezCent = randi.f(0, 1, 2) + Cliente'dezCent
-	    Cliente'vintecincoCent = randi.f(0, 1, 2) + Cliente'vintecincoCent
-	    Cliente'cinquentaCent = randi.f(0, 1, 2) + Cliente'cinquentaCent
-	    Cliente'umrealCent = randi.f(0, 1, 2) + Cliente'umrealCent
-	    Cliente'doisreaisCedula = randi.f(0, 1, 2) + Cliente'doisreaisCedula
-	    Cliente'cincoreaisCedula = randi.f(0, 1, 2) + Cliente'cincoreaisCedula
-	    Cliente'dezreaisCedula = randi.f(0, 1, 2) + Cliente'dezreaisCedula
-	    Cliente'vintereaisCedula = randi.f(0, 1, 2) + Cliente'vintereaisCedula
-	    Cliente'cinquentareaisCedula = randi.f(0, 1, 2) + Cliente'cinquentareaisCedula
-        let Cliente'carteira = Cliente'cincoCent*0.05 + Cliente'dezCent*0.10 + Cliente'vintecincoCent*0.25 + Cliente'cinquentaCent*0.5 + Cliente'umrealCent*1 + Cliente'doisreaisCedula*2 + Cliente'cincoreaisCedula*5 + Cliente'dezreaisCedula*10 + Cliente'vintereaisCedula*20 + Cliente'cinquentareaisCedula*50
-        print 1 line with Cliente'carteira thus
-        **.** CARTEIRA
-    loop 
+    Estacionamento'faturamento_total = Estacionamento'faturamento_total + Cliente'valorPagamento
+    ''if Estacionamento'faturamento_total > 500
+        ''print 1 line thus
+        ''FINISH
+    ''else
     
-    print 13 line with TIME.V*HOURS.V, Cliente'waiting_time, Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
-    ***.*** TEMPO
-    ***.*** TEMPO CLIENTE ESTACIONAMENTO
-    **.** numero de moedas cinco centavos
-    **.** numero de moedas dez centavos
-    **.** numero de moedas vinte e cinco centavos
-    **.** numero de moedas cinquenta centavos
-    **.** numero de moedas um reaal centavos
-    **.** numero de cedulas dois reais
-    **.** numero de cedulas cinco reais
-    **.** numero de cedulas dez reais
-    **.** numero de cedulas vinte reais
-    **.** numero de cedulas cinquenta reais
-    ------------------------------------
-   '' stop
+        print 1 line with Estacionamento'numberClients thus
+        -- CLIENTE NUMERO **.** --
+    
+        Cliente'carteira = 0
+        until Cliente'carteira >= Cliente'valorPagamento
+        do   
+	       Cliente'cincoCent = randi.f(0, 1, 2) + Cliente'cincoCent
+    	   Cliente'dezCent = randi.f(0, 1, 2) + Cliente'dezCent
+	       Cliente'vintecincoCent = randi.f(0, 1, 2) + Cliente'vintecincoCent
+	       Cliente'cinquentaCent = randi.f(0, 1, 2) + Cliente'cinquentaCent
+	       Cliente'umrealCent = randi.f(0, 1, 2) + Cliente'umrealCent
+           Cliente'doisreaisCedula = randi.f(0, 1, 2) + Cliente'doisreaisCedula
+	       Cliente'cincoreaisCedula = randi.f(0, 1, 2) + Cliente'cincoreaisCedula
+	       Cliente'dezreaisCedula = randi.f(0, 1, 2) + Cliente'dezreaisCedula
+	       Cliente'vintereaisCedula = randi.f(0, 1, 2) + Cliente'vintereaisCedula
+	       Cliente'cinquentareaisCedula = randi.f(0, 1, 2) + Cliente'cinquentareaisCedula
+           let Cliente'carteira = Cliente'cincoCent*0.05 + Cliente'dezCent*0.10 + Cliente'vintecincoCent*0.25 + Cliente'cinquentaCent*0.5 + Cliente'umrealCent*1 + Cliente'doisreaisCedula*2 + Cliente'cincoreaisCedula*5 + Cliente'dezreaisCedula*10 + Cliente'vintereaisCedula*20 + Cliente'cinquentareaisCedula*50
+           print 1 line with Cliente'carteira thus
+           **.** CARTEIRA
+        loop 
+    
+        print 14 line with TIME.V*HOURS.V, Cliente'waiting_time, Cliente'valorPagamento, Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
+        **.** HORARIO DIA RELOGIO
+        **.** TEMPO CLIENTE ESTACIONAMENTO
+        **.** VALOR PAGAMENTO CLIENTE
+        **.** numero de moedas cinco centavos
+        **.** numero de moedas dez centavos
+        **.** numero de moedas vinte e cinco centavos
+        **.** numero de moedas cinquenta centavos
+        **.** numero de moedas um reaal centavos
+        **.** numero de cedulas dois reais
+        **.** numero de cedulas cinco reais
+        **.** numero de cedulas dez reais
+        **.** numero de cedulas vinte reais
+        **.** numero de cedulas cinquenta reais
+        ------------------------------------
+       '' stop
    
-   
+       ''print 1 line with Estacionamento'faturamento_total thus
+       ''FATURAMENTO ATE O MOMENTO RR$ ****.**
+    ''always condição faturamento
 end ''gerar_dinheiro_estacionamento
 
 ''-----------------------------------------------------------------
@@ -115,14 +129,25 @@ process method Estacionamento'generator
    until time.v >= time_to_close
    do
       create a Cliente
+      let Estacionamento'numberClients = Estacionamento'numberClients + 1
       activate a tempo_estacionamento(Cliente) now      
       activate a gerar_dinheiro(Cliente) now
-      
-      wait (3/40)*(TIME.V*HOURS.V)*(TIME.V*HOURS.V)-3*(TIME.V*HOURS.V)+40 minutes''exponential.f(mean_interarrival_time, 1) minutes
+      wait (3/40)*(TIME.V*HOURS.V)*(TIME.V*HOURS.V)-3*(TIME.V*HOURS.V)+40 minutes''exponential.f(mean_interarrival_time, 1) minutes       
    loop
-   
+
 end  ''generator
 
+''-----------------------------------------------------------------
+'' Função em construção.. numberClients significa numero de clientes por hora, é necessário ficar zerando esta variavel ao passar uma nova hora!
+process method Estacionamento'printTime
+    ''define umaHora, duasHoras, tresHoras, quatroHoras, cincoHoras, seisHoras, seteHoras, oitoHoras, noveHoras, dezHoras, onzeHoras, dozeHoras, trezeHoras, quatorzeHoras, quinzeHoras, dezesseisHoras, dezesseteHoras, dezoitoHoras, dezenoveHoras, vinteHoras vinteeumaHoras, vinteeduasHoras, vinteetresHoras and vinteequatroHoras as a integer variable
+    if frac.f(TIME.V*HOURS.V) = 0
+        print 2 line with TIME.V*HOURS.V, Estacionamento'numberClients thus
+        **.** HORAS
+        **.** Clientes 
+    endif
+    numberClients = 0
+end ''printTime
 
 ''-----------------------------------------------------------------
 
@@ -130,7 +155,7 @@ routine initialize
    define clockGraph as a Clock reference variable
    define queueGraph as a Meter reference variable
    define waitGraph as a Plot reference variable
-
+   Estacionamento'faturamento_total = 0
      	''-- initialize simulation parameters, create entities etc.
    Estacionamento'no_of_vacancies = 20
    Estacionamento'mean_interarrival_time = 2.0
@@ -139,8 +164,10 @@ routine initialize
 
    create every vacancy(1)
    let u.vacancy(1) = Estacionamento'no_of_vacancies
+   ''activate a Estacionamento'printTime now
+   Estacionamento'numberClients = 0
    activate a Estacionamento'generator now
-
+    
    Let TIMESCALE.V = 1000
    Let TIMESYNC.V = 'clock_update'
 
@@ -175,6 +202,7 @@ routine initialize
 
 	''-- init simulation parameters from user input
    let u.VACANCY(1) = Estacionamento'no_of_vacancies
+
 end
 
 
@@ -218,6 +246,9 @@ routine show_results
    define dialog as a Dialogbox reference variable
    define utilization as a real variable
 
+   print 1 line with Estacionamento'faturamento_total thus
+   FATURAMENTO TOTAL RR$ ****.**
+    
       ''-- display the 'endsim.icn' which asks for a user click 
    call erase(Estacionamento'shape)		''-- erase the old title icon
    let appearance(Estacionamento'shape) = Templates'find("endsim.icn")

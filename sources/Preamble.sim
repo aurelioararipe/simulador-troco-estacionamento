@@ -14,18 +14,22 @@ Preamble importing the gui.m subsystem
          a whi,
          a wdelta,
          a clocktime,
-         a generator process method, and
+         a printTime process method,
+         a generator process method, 
+         a numberClients,
+         a faturamento_total, and
          a shape
+         
 
       tally waiting_time_histogram (wlo to whi by wdelta)
          as the dynamic histogram of waiting_time
       tally mean_waiting_time as the mean of waiting_time
       display variables include clocktime
         
-      define generator as a process method
+      define generator and printTime as a process method
       define shape as an Icon reference variable
-      define no_of_vacancies as an integer variable
-      define mean_interarrival_time, mean_service_time, day_length
+      define no_of_vacancies and numberClients as an integer variable
+      define faturamento_total, mean_interarrival_time, mean_service_time, day_length
          and waiting_time as real variables
       define wlo, whi and wdelta as double variables
       define clocktime as a double variable
