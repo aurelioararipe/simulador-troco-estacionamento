@@ -52,10 +52,16 @@ Element com.caci.simlab.projects.ProjectRoot "_ROOT_"
    Element com.caci.simlab.projects.ProjectDirectory "1a"
    EndLevel
 
+   Element com.caci.simlab.projects.ProjectDirectory "1b"
+   EndLevel
+
    Element com.caci.simlab.projects.ProjectDirectory "26"
    EndLevel
 
    Element com.caci.simlab.projects.ProjectDirectory "29"
+   EndLevel
+
+   Element com.caci.simlab.projects.ProjectDirectory "2a"
    EndLevel
 
    Element com.caci.simlab.projects.ProjectDirectory "2c"
@@ -118,6 +124,9 @@ Element com.caci.simlab.projects.ProjectRoot "_ROOT_"
    Element com.caci.simlab.projects.ProjectDirectory "8b"
    EndLevel
 
+   Element com.caci.simlab.projects.ProjectDirectory "94"
+   EndLevel
+
    Element com.caci.simlab.projects.ProjectDirectory "98"
    EndLevel
 
@@ -125,6 +134,9 @@ Element com.caci.simlab.projects.ProjectRoot "_ROOT_"
    EndLevel
 
    Element com.caci.simlab.projects.ProjectDirectory "9b"
+   EndLevel
+
+   Element com.caci.simlab.projects.ProjectDirectory "9d"
    EndLevel
 
    Element com.caci.simlab.projects.ProjectDirectory "a0"
