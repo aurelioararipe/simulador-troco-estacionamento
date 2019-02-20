@@ -1,4 +1,6 @@
 0 0 begin module ..\sources\preamble.sim
 0 0 begin module ..\sources\parking.sim
 parking.sim: line    23** Warning 1142  involving "sumtime" : Local variable modified but not used
+parking.sim: line    93** Warning 1002  involving "contador" : Local variable not used
+parking.sim: line    93** Warning 1002  involving "j" : Local variable not used
 0 0 begin module C:\Program Files (x86)\SIMOO_R4_student\defs\gui.m.sim

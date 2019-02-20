@@ -88,27 +88,85 @@ process method Cliente'gerar_dinheiro
            print 1 line with Cliente'carteira thus
            **.** CARTEIRA
         loop 
+        
+        ''Definindo quais cédulas o Cliente tem
+        Define I, J, cont and contador as integer variables
+        Define troco as real variables
+        Cliente'valorPago = 0
+        cont = 1
+        Cliente'flagValorPago = 0
+        reserve Cliente'valoresPagos as 6
+        
+        if Cliente'cinquentareaisCedula <> 0 and Cliente'flagValorPago = 0
+            let Cliente'valoresPagos(cont) = 50
+            cont = cont + 1
+            if Cliente'valorPago > Cliente'valorPagamento
+                let Cliente'flagValorPago = 1
+            endif    
+        endif
+        if Cliente'vintereaisCedula <> 0 and Cliente'flagValorPago = 0
+            let Cliente'valoresPagos(cont) = 20
+            cont = cont + 1
+            if Cliente'valorPago > Cliente'valorPagamento
+                let Cliente'flagValorPago = 1
+            endif
+        endif
+        if Cliente'dezreaisCedula <> 0 and Cliente'flagValorPago = 0
+            let Cliente'valoresPagos(cont) = 10
+            cont = cont + 1
+            if Cliente'valorPago > Cliente'valorPagamento
+                let Cliente'flagValorPago = 1
+            endif
+        endif
+        if Cliente'cincoreaisCedula <> 0
+            let Cliente'valoresPagos(cont) = 5
+            cont = cont + 1
+            if Cliente'valorPago > Cliente'valorPagamento
+                let Cliente'flagValorPago = 1
+            endif
+        endif
+        if Cliente'doisreaisCedula <> 0
+            let Cliente'valoresPagos(cont) = 2
+            cont = cont + 1
+        endif
     
-        print 14 line with TIME.V*HOURS.V, Cliente'waiting_time, Cliente'valorPagamento, Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
+    
+        print 9 line with TIME.V*HOURS.V, Cliente'waiting_time, Cliente'valorPagamento, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
         **.** HORARIO DIA RELOGIO
         **.** TEMPO CLIENTE ESTACIONAMENTO
         **.** VALOR PAGAMENTO CLIENTE
-        **.** numero de moedas cinco centavos
-        **.** numero de moedas dez centavos
-        **.** numero de moedas vinte e cinco centavos
-        **.** numero de moedas cinquenta centavos
-        **.** numero de moedas um reaal centavos
         **.** numero de cedulas dois reais
         **.** numero de cedulas cinco reais
         **.** numero de cedulas dez reais
         **.** numero de cedulas vinte reais
         **.** numero de cedulas cinquenta reais
         ------------------------------------
-       '' stop
-   
-       ''print 1 line with Estacionamento'faturamento_total thus
-       ''FATURAMENTO ATE O MOMENTO RR$ ****.**
-    ''always condição faturamento
+        
+        for I = 1 to cont
+        do
+            List Cliente'valoresPagos(I)
+        loop
+        
+        ''Definindo com quais cedúlas o Cliente irá pagar. 
+        For I = 1 to cont
+        Do
+	        if Cliente'valorPago <= Cliente'valorPagamento 
+                if Cliente'valoresPagos(I) >= Cliente'valorPagamento ''A nota é maior que o valor a ser pago
+                    Cliente'valorPago = Cliente'valoresPagos(I)
+                else ''A nota é menor que o valor a ser pago
+                    Cliente'valorPago = Cliente'valorPago + Cliente'valoresPagos(I)
+                always
+            endif
+        Loop        
+        troco = Cliente'valorPago - Cliente'valorPagamento
+        Estacionamento'trocos = Estacionamento'trocos + troco
+        print 3 line with Cliente'valorPago, troco, Estacionamento'trocos thus
+        **.** reais o cliente pagou
+        **.** reais o Cliente recebeu de troco
+        **.** reais necessidade de troco ate agora        
+        
+        Cliente'valorPago = 0
+        
 end ''gerar_dinheiro_estacionamento
 
 ''-----------------------------------------------------------------

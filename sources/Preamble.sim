@@ -17,7 +17,8 @@ Preamble importing the gui.m subsystem
          a printTime process method,
          a generator process method, 
          a numberClients,
-         a faturamento_total, and
+         a faturamento_total,
+         a trocos and
          a shape
          
 
@@ -29,7 +30,7 @@ Preamble importing the gui.m subsystem
       define generator and printTime as a process method
       define shape as an Icon reference variable
       define no_of_vacancies and numberClients as an integer variable
-      define faturamento_total, mean_interarrival_time, mean_service_time, day_length
+      define faturamento_total, trocos, mean_interarrival_time, mean_service_time, day_length
          and waiting_time as real variables
       define wlo, whi and wdelta as double variables
       define clocktime as a double variable
@@ -52,13 +53,18 @@ Preamble importing the gui.m subsystem
          a cincoreaisCedula, 
          a dezreaisCedula, 
          a vintereaisCedula,
-         a cinquentareaisCedula, ''and
+         a cinquentareaisCedula,
+         a valorPago,
+         a flagValorPago,
+         a valoresPagos and
          a waiting_time
       
       define tempo_estacionamento, gerar_dinheiro, and valor_total_carteira as a process method
-	  define carteira, valorPagamento, waiting_time, and tempo_chegada as a double variables
-      define cincoCent, dezCent, vintecincoCent, cinquentaCent, umrealCent, doisreaisCedula, cincoreaisCedula, dezreaisCedula, vintereaisCedula, and cinquentareaisCedula as integer variables
-
+	  define carteira, valorPagamento, waiting_time, valorPago and tempo_chegada as a double variables
+      define cincoCent, dezCent, vintecincoCent, cinquentaCent, umrealCent, doisreaisCedula, cincoreaisCedula, dezreaisCedula, vintereaisCedula, flagValorPago, and cinquentareaisCedula as integer variables
+      define valoresPagos as a 1-dim, integer array
+       
+    
    end
    
    

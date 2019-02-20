@@ -9,18 +9,18 @@
  line      21  Rtempo_estacionamento
  status     2  Rtempo_estacionamento
  line      54  Rgerar_dinheiro
- status     1  Rgerar_dinheiro
- line     116  Rvalor_total_carteira
+ status     2  Rgerar_dinheiro
+ line     174  Rvalor_total_carteira
  status     1  Rvalor_total_carteira
- line     125  Rgenerator
+ line     183  Rgenerator
  status     1  Rgenerator
- line     142  Rprinttime
+ line     200  Rprinttime
  status     1  Rprinttime
- line     154  Rinitialize
+ line     212  Rinitialize
  status     1  Rinitialize
- line     212  Rget_parameters
+ line     270  Rget_parameters
  status     1  Rget_parameters
- line     243  Rshow_results
+ line     301  Rshow_results
  status     1  Rshow_results
 0 0 begin module C:\Program Files (x86)\SIMOO_R4_student\defs\gui.m.sim
  line       1  gui.m

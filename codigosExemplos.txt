@@ -1,0 +1,55 @@
+Valor a pagar: 27
+
+carteira: 20, 10, 5, 2
+
+20, 10
+20 + 10 >= 27?
+a [30]
+
+20, 5 >= 27?
+20, 5, 2 >= 27?
+a [30, 27]
+
+
+print 14 line with TIME.V*HOURS.V, Cliente'waiting_time, Cliente'valorPagamento, Cliente'cincoCent, Cliente'dezCent, Cliente'vintecincoCent, Cliente'cinquentaCent, Cliente'umrealCent, Cliente'doisreaisCedula, Cliente'cincoreaisCedula, Cliente'dezreaisCedula, Cliente'vintereaisCedula, Cliente'cinquentareaisCedula thus
+        **.** HORARIO DIA RELOGIO
+        **.** TEMPO CLIENTE ESTACIONAMENTO
+        **.** VALOR PAGAMENTO CLIENTE
+        **.** numero de moedas cinco centavos
+        **.** numero de moedas dez centavos
+        **.** numero de moedas vinte e cinco centavos
+        **.** numero de moedas cinquenta centavos
+        **.** numero de moedas um reaal centavos
+        **.** numero de cedulas dois reais
+        **.** numero de cedulas cinco reais
+        **.** numero de cedulas dez reais
+        **.** numero de cedulas vinte reais
+        **.** numero de cedulas cinquenta reais
+        ------------------------------------
+
+
+
+ For I = 1 to cont
+        Do
+            List Cliente'valoresPagos(I)
+        Loop
+
+''Definindo com quais cedúlas o Cliente irá pagar. 
+        For I = 1 to cont
+        Do
+	        ''A nota é maior que o valor a ser pago
+	        if Cliente'valoresPagos(I) >= Cliente'valorPagamento
+	            Cliente'valorPago = Cliente'valoresPagos(I)
+	            
+	        ''A nota é menor que o valor a ser pago
+	        else
+                Cliente'valorPago = Cliente'valorPago + Cliente'valoresPagos(I)
+            always
+        Loop        
+        troco = Cliente'valorPago - Cliente'valorPagamento
+        Cliente'trocos = Cliente'trocos + troco
+        print 3 line with Cliente'valorPago, troco, Cliente'trocos thus
+        **.** reais o cliente pagou
+        **.** reais o Cliente recebeu de troco
+        **.** reais necessidade de troco ate agora        
+        
